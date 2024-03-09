@@ -1,0 +1,24 @@
+{
+  "name": "stelle",
+  "version": "0.1.0",
+  "description": "A JavaScript Library that easily creates a starry sky on your webpage. Powered by Canvas API.",
+  "main": "index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kev1nweng/stelle.js.git"
+  },
+  "keywords": [
+    "stars",
+    "canvas",
+    "js"
+  ],
+  "author": "kW",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/kev1nweng/stelle.js/issues"
+  },
+  "homepage": "https://github.com/kev1nweng/stelle.js#readme"
+}
