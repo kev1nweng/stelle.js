@@ -6,7 +6,6 @@
 " Sei la stella nei mei occhi. "
 
 export class Stelle {
-
   /**
    * 生成 Stelle 实例
    * @param {string} parent 生成的父元素
@@ -104,6 +103,8 @@ export class Stelle {
     this.canvas.style.height = `${this.pnode.offsetHeight}px`;
     this.ctx.scale(this.config.implicit.PX_RATIO, this.config.implicit.PX_RATIO);
   }
+  destroy() { }
+
   generateStars() {
     for (let i = 0; i < (this.data.numStars); i++) {
       this.config.runtime.starArray.push({
@@ -122,5 +123,4 @@ export class Stelle {
     }
   }
   drawStars() { }
-  destroy() { }
 }
