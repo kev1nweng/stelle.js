@@ -205,12 +205,12 @@ export class Stelle {
     this.drawLines.payload(ctx);
     if (this.flags.debug)
       debug.showDiagData.payload(ctx, {
-        numStars: numStars,
+        numStars: this.data.numStars,
         w: this.canvas.offsetWidth * PX_RATIO,
         h: this.canvas.offsetHeight * PX_RATIO,
-        fps: frameRate.fpsStr,
-        bright: specs.counter.isBrightMode,
-        di: DENSE_INVERSE,
+        fps: 0,
+        bright: this.flags.bright,
+        di: this.config.explicit.DENSE_INVERSE,
       });
   }
   drawLines = {
