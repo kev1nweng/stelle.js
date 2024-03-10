@@ -3,5 +3,6 @@ export class Stelle {
   params: {
     useMeteor: boolean;
     useDawn: boolean;
-  }
+    useDistortion: boolean;
+  };
 }
