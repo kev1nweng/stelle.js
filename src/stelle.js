@@ -3,7 +3,7 @@
   明知不可为而为之的坚定。
   */
 
-" Sei la stella nei mei occhi. "
+" Sei la stella nei mei occhi. ";
 
 export class Stelle {
   /**
@@ -14,18 +14,25 @@ export class Stelle {
    */
   constructor(parent, params) {
     this.pnode = document.querySelector(parent);
-    if (!this.pnode) this.utils.sendError(`Failed to find element: "${query}" point to nothing! `);
-    this.flags.meteor = params.useMeteor ? true : false
+    if (!this.pnode)
+      this.utils.sendError(
+        `Failed to find element: "${query}" point to nothing! `
+      );
+    this.flags.meteor = params.useMeteor ? true : false;
     this.flags.distortion = params.useDistortion ? true : false;
   }
 
   get utils() {
     const that = this;
     return {
-      $qs: (query) => { return document.querySelector(query) },
-      $id: (id) => { return document.getElementById(id) },
+      $qs: (query) => {
+        return document.querySelector(query);
+      },
+      $id: (id) => {
+        return document.getElementById(id);
+      },
       sendError: (err, isFatal = false) => {
-        const prefix = "[ Stelle ]"
+        const prefix = "[ Stelle ]";
         if (isFatal) throw new Error(`${prefix} ${err}`);
         else console.error(`${prefix} ${err}`);
       },
@@ -83,14 +90,19 @@ export class Stelle {
         deltaA = ae - as;
         k = deltaT / deltaA;
         return ts + (g - as) * k;
-      }
-    }
+      },
+    };
   }
   get data() {
     const that = this;
     return {
-      numStars: new Number(((that.canvas.width * that.canvas.height) / this.config.explicit["DENSE_INVERSE"]).toFixed(0)),
-    }
+      numStars: new Number(
+        (
+          (that.canvas.width * that.canvas.height) /
+          this.config.explicit["DENSE_INVERSE"]
+        ).toFixed(0)
+      ),
+    };
   }
 
   pnode = null;
@@ -99,19 +111,19 @@ export class Stelle {
     dawn: false,
     bright: false,
     distortion: false,
-  }
+  };
   config = {
     runtime: {
       starArray: [],
       initialized: false,
     },
     implicit: {
-      "PX_RATIO": window.devicePixelRatio || 1,
+      PX_RATIO: window.devicePixelRatio || 1,
     },
     explicit: {
-      "DENSE_INVERSE": 2e3,
-    }
-  }
+      DENSE_INVERSE: 2e3,
+    },
+  };
 
   init() {
     if (this.config.runtime.initialized) {
@@ -126,15 +138,20 @@ export class Stelle {
     this.canvas.height = this.pnode.offsetHeight * PX_RATIO;
     this.canvas.style.width = `${this.pnode.offsetWidth}px`;
     this.canvas.style.height = `${this.pnode.offsetHeight}px`;
-    this.ctx.scale(this.config.implicit.PX_RATIO, this.config.implicit.PX_RATIO);
+    this.ctx.scale(
+      this.config.implicit.PX_RATIO,
+      this.config.implicit.PX_RATIO
+    );
   }
   destroy() { }
 
   generateStars() {
-    for (let i = 0; i < (this.data.numStars); i++) {
+    for (let i = 0; i < this.data.numStars; i++) {
       this.config.runtime.starArray.push({
         i: i,
-        x: Math.random() * this.canvas.offsetWidth * 1.25 - this.canvas.offsetWidth * 0.125,
+        x:
+          Math.random() * this.canvas.offsetWidth * 1.25 -
+          this.canvas.offsetWidth * 0.125,
         y:
           Math.random() * this.canvas.offsetHeight * 1.25 -
           this.canvas.offsetHeight * 0.125,
@@ -181,11 +198,14 @@ export class Stelle {
           1
         );
       star.yDist = this.flags.distortion
-        ? (star.y + (star.y <= this.canvas.offsetHeight / 2 ? -yDistDelta : yDistDelta))
+        ? star.y +
+        (star.y <= this.canvas.offsetHeight / 2 ? -yDistDelta : yDistDelta)
         : star.y;
       if (star.yDist > this.canvas.offsetHeight / 2) {
         alpha *=
-          1 - (star.y - this.canvas.offsetHeight / 2) / (this.canvas.offsetHeight / 2);
+          1 -
+          (star.y - this.canvas.offsetHeight / 2) /
+          (this.canvas.offsetHeight / 2);
       }
       if (specs.counter.isBrightMode) {
         star.y -= star.vy;
@@ -199,7 +219,14 @@ export class Stelle {
           star.y = this.canvas.offsetHeight + star.radius * 2;
         }
       }
-      this.utils.drawAStar(star.x, star.y, star.radius, star.display, alpha, ctx);
+      this.utils.drawAStar(
+        star.x,
+        star.y,
+        star.radius,
+        star.display,
+        alpha,
+        ctx
+      );
       this.ctx.fill();
     }
     this.drawLines.payload(ctx);
