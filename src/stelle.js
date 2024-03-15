@@ -36,8 +36,21 @@ export class Stelle {
         if (isFatal) throw new Error(`${prefix} ${err}`);
         else console.error(`${prefix} ${err}`);
       },
+      setAttributes(element, attributes) {
+        for (let x = 0; x < attributes.length; x++) {
+          element.setAttribute(attributes[x][0], attributes[x][1]);
+        }
+      },
+      resizeCanvas(canvas, ctx) {
+        canvas.width = this.pnode.offsetWidth * PX_RATIO;
+        canvas.height = this.pnode.offsetHeight * PX_RATIO;
+        canvas.style.width = `${this.pnode.offsetWidth}px`;
+        canvas.style.height = `${this.pnode.offsetHeight}px`;
+        ctx.scale(this.config.implicit.PX_RATIO, this.config.implicit.PX_RATIO);
+      },
       drawAStar(starX, starY, starR, starD, starA, ctx) {
         let alphaFrozen;
+        alphaFrozen;
         ctx.beginPath();
         if (that.flags.bright) {
           alphaFrozen = true;
@@ -67,6 +80,16 @@ export class Stelle {
             ctx.fill();
           }
         }
+      },
+      animate(callback, framerate, then) {
+        const interval = 1000 / framerate;
+        const now = Date.now();
+        const delta = now - then;
+        if (delta >= interval) {
+          then = now - (delta % interval);
+          callback();
+        }
+        requestAnimationFrame(this.animate);
       },
       rangeMap(g, as, ae, ts, te) {
         if (ts >= te || as >= ae || g < as || g > ae) {
@@ -119,6 +142,7 @@ export class Stelle {
     },
     implicit: {
       PX_RATIO: window.devicePixelRatio || 1,
+      then: 0,
     },
     explicit: {
       DENSE_INVERSE: 2e3,
@@ -131,19 +155,30 @@ export class Stelle {
       return;
     }
     const element = document.createElement("canvas");
+    element.addEventListener("resize", () => {
+      this.utils.resizeCanvas(this.canvas, this.ctx);
+      this.generateStars();
+    });
     this.pnode.appendChild(element);
     this.canvas = element;
     this.ctx = this.canvas.getContext("2d");
-    this.canvas.width = this.pnode.offsetWidth * PX_RATIO;
-    this.canvas.height = this.pnode.offsetHeight * PX_RATIO;
-    this.canvas.style.width = `${this.pnode.offsetWidth}px`;
-    this.canvas.style.height = `${this.pnode.offsetHeight}px`;
-    this.ctx.scale(
-      this.config.implicit.PX_RATIO,
-      this.config.implicit.PX_RATIO
+    this.utils.resizeCanvas(this.canvas, this.ctx);
+    this.generateStars();
+    this.config.implicit.then = Date.now();
+    this.session = requestAnimationFrame(
+      this.utils.animate(this.drawStars, 12, that.config.implicit.then)
     );
+    this.config.runtime.initialized = true;
   }
-  destroy() { }
+  destroy() {
+    if (!this.config.runtime.initialized) {
+      this.utils.sendError("Stelle can't be destroyed before initialization. ");
+      return;
+    }
+    cancelAnimationFrame(this.session);
+    this.canvas.remove();
+    this.config.runtime.initialized = false;
+  }
 
   generateStars() {
     for (let i = 0; i < this.data.numStars; i++) {
@@ -281,39 +316,6 @@ export class Stelle {
       }
       if (this.scanFrame <= Number.MAX_SAFE_INTEGER) this.scanFrame++;
     },
-    payloadScorpius(ctx) {
-      ctx.strokeStyle = null;
-      ctx.lineWidth = null;
-      let starA, starB;
-      for (let s = 0; s < scorpius.stars.length; s++) {
-        if (scorpius.stars[s].lineTo) {
-          starA = {
-            x:
-              scorpius.spec.center.x +
-              scorpius.stars[s].dx * scorpius.spec.scale.k,
-            y:
-              scorpius.spec.center.y -
-              scorpius.stars[s].dy * scorpius.spec.scale.k,
-          };
-          starB = {
-            x:
-              scorpius.spec.center.x +
-              scorpius.stars[scorpius.stars[s].lineTo].dx *
-              scorpius.spec.scale.k,
-            y:
-              scorpius.spec.center.y -
-              scorpius.stars[scorpius.stars[s].lineTo].dy *
-              scorpius.spec.scale.k,
-          };
-          ctx.beginPath();
-          ctx.strokeStyle = `rgba(255, 255, 255, ${0.5 + Math.random() * 0.1})`;
-          ctx.lineWidth = scorpius.stars[s].radius * 0.5;
-          ctx.moveTo(starA.x, starA.y);
-          ctx.lineTo(starB.x, starB.y);
-          ctx.stroke();
-          ctx.lineWidth = null;
-        }
-      }
-    },
   };
+  // TODO: METEOR INTERGRATION;
 }
