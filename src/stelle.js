@@ -47,7 +47,10 @@
           canvas.height = this.pnode.offsetHeight * PX_RATIO;
           canvas.style.width = `${this.pnode.offsetWidth}px`;
           canvas.style.height = `${this.pnode.offsetHeight}px`;
-          ctx.scale(this.config.implicit.PX_RATIO, this.config.implicit.PX_RATIO);
+          ctx.scale(
+            this.config.implicit.PX_RATIO,
+            this.config.implicit.PX_RATIO
+          );
         },
         drawAStar(starX, starY, starR, starD, starA, ctx) {
           let alphaFrozen;
@@ -173,7 +176,9 @@
     }
     destroy() {
       if (!this.config.runtime.initialized) {
-        this.utils.sendError("Stelle can't be destroyed before initialization. ");
+        this.utils.sendError(
+          "Stelle can't be destroyed before initialization. "
+        );
         return;
       }
       cancelAnimationFrame(this.session);
@@ -235,13 +240,13 @@
           );
         star.yDist = this.flags.distortion
           ? star.y +
-          (star.y <= this.canvas.offsetHeight / 2 ? -yDistDelta : yDistDelta)
+            (star.y <= this.canvas.offsetHeight / 2 ? -yDistDelta : yDistDelta)
           : star.y;
         if (star.yDist > this.canvas.offsetHeight / 2) {
           alpha *=
             1 -
             (star.y - this.canvas.offsetHeight / 2) /
-            (this.canvas.offsetHeight / 2);
+              (this.canvas.offsetHeight / 2);
         }
         if (specs.counter.isBrightMode) {
           star.y -= star.vy;
@@ -296,9 +301,9 @@
           for (let x = 0; x < connectionArray.length; x++) {
             for (let y = 0; y < connectionArray.length; y++) {
               if (y !== x && y <= 6) {
-                let startPoint = connectionArray[x];
-                let endPoint = connectionArray[y];
-                let lineAlpha =
+                const startPoint = connectionArray[x];
+                const endPoint = connectionArray[y];
+                const lineAlpha =
                   window.innerHeight /
                   1e3 /
                   Math.abs(startPoint.y - (this.scanU + this.scanD) / 2);
