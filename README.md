@@ -1,3 +1,5 @@
+***我已经停止开发该项目。I AM NO LONGER WORKING ON THIS.***
+
 # stelle.js
 
 **WIP：该库尚未完成，很有可能无法正常工作。**
